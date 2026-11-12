@@ -1,0 +1,26 @@
+# Local/device configuration and secrets
+local-assistant.conf
+*.conf.local
+.env
+.env.*
+*.pem
+*.key
+*_secret*
+*credentials*
+*token*
+
+# Device dumps, logs, recordings and model weights
+station-full-dump*
+*.gguf
+*.wav
+*.log
+*.dmp
+*.lmdb
+*.lease
+
+# Build/test intermediates
+.build/
+tests/bin/
+*.o
+*.bak
+__pycache__/

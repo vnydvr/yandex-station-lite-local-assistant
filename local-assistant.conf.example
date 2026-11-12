@@ -1,0 +1,76 @@
+# Local Whistle Assistant configuration — Yandex Station Lite 1 / Micro v1.3.
+# New executables are static AArch64 and are installed in BIN_DIR.
+# All recordings, conversation history and logs remain in tmpfs (/tmp).
+
+DATA_DIR=/data
+INSTALL_DIR=/data/local-assistant
+BIN_DIR=/data/local-assistant/bin
+TMP_DIR=/tmp/local-assistant
+CAPTURE_TMP=/tmp/alisa-capture
+CAPTURE_SOCKET=/tmp/alisa-capture/microphone.sock
+HOOK_TMP=/tmp/vqe_tap.so
+
+# Prebuilt AArch64 static utilities — no compiler is needed on the speaker.
+EVENTWATCH_BIN=/data/local-assistant/bin/eventwatch
+CAPTURE_HELPER_BIN=/data/local-assistant/bin/vqe-whistle-capture
+INPUT_EVENT_TYPE=1
+INPUT_EVENT_CODE=113
+INPUT_EVENT_DEVICE=/dev/input/event0
+
+# Existing capture-only Quasar profile / VQE tap.
+QUASAR_ROOT=/system/vendor/quasar
+QUASAR_CTL=/system/vendor/quasar/q
+QUASAR_LAUNCHER=/system/vendor/quasar/quasar_launcher2
+CAPTURE_PROFILE=/data/alisa-capture/launch.capture.json
+CAPTURE_HOOK=/data/alisa-capture/vqe_tap.so
+
+# Whistle detector — settings retained from laptop tests.
+WHISTLE_MIN_FREQ=1400
+WHISTLE_MAX_FREQ=1550
+WHISTLE_FREQ_STEP=25
+WHISTLE_MIN_RMS=250
+WHISTLE_MIN_RATIO=0.30
+WHISTLE_WINDOW_FRAMES=40
+WHISTLE_REQUIRED_MATCHES=28
+WHISTLE_RELEASE_FRAMES=5
+
+# Speech endpoint detection on mono S16LE / 16 kHz VQE audio.
+VAD_START_RMS=430
+VAD_END_RMS=300
+VAD_SILENCE_MS=1200
+VAD_MAX_SPEECH_MS=25000
+VAD_WAIT_VOICE_MS=8000
+VAD_MIN_VOICE_MS=150
+
+SHERPA_BIN=/data/sherpa-ncnn
+SHERPA_MODEL=/data/sherpa-model
+SHERPA_THREADS=2
+
+FALCON_BIN=/data/llama-completion
+FALCON_MODEL=/data/falcon-q4.gguf
+LLAMA_THREADS=2
+MAX_TOKENS=150
+LLAMA_TEMPERATURE=0.1
+SYSTEM_PROMPT="You are a concise local voice assistant. Answer briefly and directly in English. Prefer one to three short sentences. Do not repeat the question or ramble. Explain details only when asked or essential."
+
+ESPEAK_BIN=/data/espeak-ng
+ESPEAK_DATA_DIR=/data/espeak-ng-data
+ESPEAK_VOICE=en-us
+APLAY_BIN=aplay
+# 'default' uses the existing ALSA softvol route; the manager never changes volume.
+APLAY_DEVICE=default
+
+LED_SCRIPT=/data/local-assistant/led.sh
+
+# Must match the speaker's physical state when the manager starts.
+# alice = stock Alice running, mic unmuted.
+# muted = hardware mute is currently active.
+# local = start local assistant immediately.
+BOOT_MODE=alice
+BOOT_MUTED_NEXT=local
+QUASAR_WAIT_SECONDS=25
+
+# DEBUG includes per-stage details and recognized text; does not log audio frames.
+LOG_LEVEL=DEBUG
+LOG_CONSOLE=${LOCAL_ASSISTANT_LOG_CONSOLE:-0}
+LOG_MAX_BYTES=1048576
